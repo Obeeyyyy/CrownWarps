@@ -1,0 +1,19 @@
+#
+# if you have any questions or suggestions, please do not hesitate and
+# join our discord: https://dsc.gg/crownplugins
+# we are there to assist you
+#
+
+gui-size: 27
+
+# this is the placeholder item material for the home inventory
+placeholder-material: IRON_BARS
+
+# the slots that will be filled with the placeholder item
+placeholder-slots:
+  - 0
+  - 9
+  - 18
+  - 8
+  - 17
+  - 26

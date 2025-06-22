@@ -1,0 +1,6 @@
+sounds:
+  open-gui: "BLOCK_CHEST_OPEN:0.5:3.0"
+  warp-does-not-exist: "ENTITY_GENERIC_EXPLODE:0.5:3.0"
+  warp-already-exists: "ENTITY_GENERIC_EXPLODE:0.5:3.0"
+  warp-created: "BLOCK_BAMBOO_STEP:0.5:3.0"
+  warp-deleted: "BLOCK_BAMBOO_STEP:0.5:3.0"

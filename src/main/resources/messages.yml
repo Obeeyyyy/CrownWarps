@@ -1,0 +1,18 @@
+messages: # leave string empty if you do not want to send a message
+  no-item-in-hand: '%prefix% You need to hold an item in your hand.'
+  warp-does-not-exist: '%prefix% The warp %name% does not exist.'
+  warp-already-exists: '%prefix% The warp %name% already exists.'
+  warp-created: '%prefix% You have created the warp %name%.'
+  warp-deleted: '%prefix% You have deleted the warp %name%.'
+  warp-edited: '%prefix% You have set %type% for warp %name% to %data%%white%.'
+  no-warps-yet: '%prefix% The are no warps yet.'
+  warp-list-pre-line: '%prefix% Use /warp to teleport.'
+  warp-gui-title: "&6&lWarps"
+
+multi-line-messages:
+  warp-item-lore:
+    - "&7Warp Menu"
+    - "&7"
+    - "  &8➢ %accent%Click"
+    - "    &8➥ &7Teleport to the warp."
+    - ""
