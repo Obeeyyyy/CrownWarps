@@ -6,9 +6,9 @@ package de.obey.crown.commands;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
 import de.obey.crown.core.util.InventoryUtil;
-import de.obey.crown.data.plugin.Warp;
-import de.obey.crown.data.plugin.WarpHandler;
-import de.obey.crown.data.plugin.WarpHolder;
+import de.obey.crown.data.Warp;
+import de.obey.crown.data.WarpHandler;
+import de.obey.crown.data.WarpHolder;
 import de.obey.crown.noobf.CrownWarps;
 import de.obey.crown.noobf.PluginConfig;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +40,6 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
         if (!(sender instanceof Player player))
             return false;
 
-        if (!messanger.hasPermission(player, "command.warp"))
-            return false;
-
         if (command.getName().equalsIgnoreCase("warp")) {
 
             if (args.length == 0) {
@@ -67,6 +64,24 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
             }
 
             if (args.length == 1) {
+
+                if(args[0].equalsIgnoreCase("list")) {
+                    if (!messanger.hasPermission(player, "command.warp.admin")) {
+                        return false;
+                    }
+
+                    messanger.sendNonConfigMessage(sender, "%prefix% There are " + warpHandler.getWarps().size() + " warp" + (warpHandler.getWarps().size() != 1 ? "s": ""));
+
+                    for (final Warp warp : warpHandler.getWarps().values()) {
+                        messanger.sendNonConfigMessage(sender,"- " + warp.getName());
+                        messanger.sendNonConfigMessage(sender,"  prefix: " + warp.getPrefix());
+                        messanger.sendNonConfigMessage(sender,"  slot: " + warp.getSlot());
+                        messanger.sendNonConfigMessage(sender,"  material: " + warp.getMaterial().name());
+                    }
+
+                    return false;
+                }
+
                 final String warpName = args[0].toLowerCase();
                 warpHandler.teleportToWarp(player, warpName);
                 return false;
@@ -115,19 +130,19 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                 }
 
                 if (args[0].equalsIgnoreCase("setlocation")) {
-                    Bukkit.dispatchCommand(sender, "loacetion set warp-" + warpName);
+                    Bukkit.dispatchCommand(sender, "location set warp-" + warpName);
                     return false;
                 }
             }
 
             if (args.length == 3) {
-
                 if (args[0].equalsIgnoreCase("setslot")) {
 
-                    final int newSlot = messanger.isValidInt(sender, args[2], 0);
+                    final int newSlot = messanger.isValidInt(sender, args[2], -1);
 
-                    if(newSlot < 0)
+                    if(newSlot < 0) {
                         return false;
+                    }
 
                     messanger.sendNonConfigMessage(sender, "%prefix% You have set slot for '" + warpName + "' to " + newSlot + ".");
                     warp.setSlot(newSlot);
@@ -194,10 +209,16 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                 list.add("setprefix");
                 list.add("setlocation");
                 list.add("reload");
+                list.add("list");
             }
         }
 
         if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("create")) {
+                list.add("warp-name");
+
+            } else
+
             if(sender.hasPermission("command.warp.admin")) {
                 list.addAll(warpHandler.getWarps().keySet());
             }

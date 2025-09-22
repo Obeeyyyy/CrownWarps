@@ -1,4 +1,4 @@
-package de.obey.crown.data.plugin;
+package de.obey.crown.data;
 
 import com.google.common.collect.Maps;
 import de.obey.crown.core.data.plugin.Messanger;
@@ -100,6 +100,10 @@ public class WarpHandler {
 
         if (!warps.isEmpty()) {
             warps.values().forEach(warp -> {
+                if(warp.getSlot() ==  -1) {
+                    return;
+                }
+
                 inventory.setItem(warp.getSlot(),
                         new ItemBuilder(warp.getMaterial())
                                 .setDisplayname(warp.getPrefix())

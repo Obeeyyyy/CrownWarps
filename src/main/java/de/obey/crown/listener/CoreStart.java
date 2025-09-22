@@ -14,7 +14,6 @@ public class CoreStart implements Listener {
     @EventHandler
     public void on(final CoreStartEvent event) {
 
-        crownWarps.setExecutor(event.getCrownCore().getExecutorService());
         event.sendStartupMessage(crownWarps);
         crownWarps.load();
     }

@@ -1,24 +1,24 @@
 package de.obey.crown.noobf;
 
 import de.obey.crown.commands.WarpCommand;
+import de.obey.crown.core.data.plugin.Log;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
-import de.obey.crown.data.plugin.WarpHandler;
+import de.obey.crown.data.WarpHandler;
 import de.obey.crown.listener.CoreStart;
 import lombok.Getter;
-import lombok.Setter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 @Getter
 public final class CrownWarps extends JavaPlugin {
 
-    @Setter
-    private ExecutorService executor;
+    public static final Log log = new Log();
+
     private PluginConfig pluginConfig;
     private Messanger messanger;
     private Sounds sounds;
@@ -42,6 +42,12 @@ public final class CrownWarps extends JavaPlugin {
         warpHandler.loadWarps();
 
         getServer().getPluginManager().registerEvents(new CoreStart(this), this);
+
+        initializeBStats();
+    }
+
+    private void initializeBStats() {
+        new Metrics(this, 27341);
     }
 
     public void load() {

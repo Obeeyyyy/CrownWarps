@@ -1,7 +1,7 @@
 /* CrownPlugins - CrownWarps */
 /* 30.07.2024 - 21:16 */
 
-package de.obey.crown.data.plugin;
+package de.obey.crown.data;
 
 import de.obey.crown.core.util.FileUtil;
 import de.obey.crown.noobf.CrownWarps;
@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 

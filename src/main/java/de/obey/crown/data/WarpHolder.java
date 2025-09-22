@@ -1,7 +1,7 @@
 /* CrownPlugins - CrownEnderchest */
 /* 21.07.2024 - 01:13 */
 
-package de.obey.crown.data.plugin;
+package de.obey.crown.data;
 
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
