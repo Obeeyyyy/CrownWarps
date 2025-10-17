@@ -56,8 +56,8 @@ public final class CrownWarps extends JavaPlugin {
 
         pluginManager.registerEvents(warpCommand, this);
 
-        Objects.requireNonNull(getCommand("warp")).setExecutor(warpCommand);
-        Objects.requireNonNull(getCommand("warps")).setExecutor(warpCommand);
-        Objects.requireNonNull(getCommand("warp")).setTabCompleter(warpCommand);
+        getCommand("warp").setExecutor(warpCommand);
+        getCommand("warps").setExecutor(warpCommand);
+        getCommand("warp").setTabCompleter(warpCommand);
     }
 }

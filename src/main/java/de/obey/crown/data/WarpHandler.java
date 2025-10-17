@@ -44,15 +44,17 @@ public class WarpHandler {
 
         warps.clear();
 
-        if(!folder.exists())
+        if(!folder.exists()) {
             folder.mkdir();
+        }
 
-        if(Objects.requireNonNull(folder.listFiles()).length == 0)
+        if(folder.listFiles() == null) {
             return;
+        }
 
         for (final File file : folder.listFiles()) {
             final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-            final String warpName = file.getName().split(".")[0];
+            final String warpName = file.getName().replaceFirst("\\.yml$", "");
             final Warp warp = new Warp(warpName);
 
             warp.setPrefix(FileUtil.getString(configuration, "prefix", "&f&l" + warpName));
@@ -60,7 +62,6 @@ public class WarpHandler {
             warp.setMaterial(FileUtil.getMaterial(configuration, "showMaterial", Material.STICK));
 
             warps.put(warp.getName(), warp);
-            FileUtil.saveConfigurationIntoFile(configuration, file);
         }
     }
 
