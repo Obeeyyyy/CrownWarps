@@ -60,6 +60,7 @@ public class WarpHandler {
             warp.setPrefix(FileUtil.getString(configuration, "prefix", "&f&l" + warpName));
             warp.setSlot(FileUtil.getInt(configuration, "slot", 0));
             warp.setMaterial(FileUtil.getMaterial(configuration, "showMaterial", Material.STICK));
+            warp.setPermission(FileUtil.getString(configuration, "permission", null));
 
             warps.put(warp.getName(), warp);
         }
@@ -133,6 +134,13 @@ public class WarpHandler {
             messanger.sendMessage(player, "warp-does-not-exist", new String[]{"name"}, warpName);
             sounds.playSoundToPlayer(player, "warp-does-not-exist");
             return;
+        }
+
+        final Warp warp = getWarp(warpName);
+
+        if(warp.getPermission() != null) {
+            if(!messanger.hasPermission(player, warp.getPermission()))
+                return;
         }
 
         Teleporter.teleportWithAnimation(player, "warp-" + warpName);

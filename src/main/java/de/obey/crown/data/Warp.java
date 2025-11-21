@@ -16,7 +16,7 @@ import java.io.File;
 public final class Warp {
 
     private final String name;
-    private String prefix;
+    private String prefix, permission;
     private Material material;
     private int slot;
 
@@ -34,6 +34,10 @@ public final class Warp {
         configuration.set("prefix", prefix);
         configuration.set("slot", slot);
         configuration.set("showMaterial", material.name());
+
+        if(permission != null) {
+            configuration.set("permission", permission);
+        }
 
         FileUtil.saveConfigurationIntoFile(configuration, file);
         return this;
