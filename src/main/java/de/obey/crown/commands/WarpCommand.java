@@ -133,6 +133,19 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     Bukkit.dispatchCommand(sender, "location set warp-" + warpName);
                     return false;
                 }
+
+                if (args[0].equalsIgnoreCase("setpermission")) {
+                    messanger.sendNonConfigMessage(sender, "%prefix% You have set the permission for '" + warpName + "'.");
+
+                    if(args[1].equalsIgnoreCase("none")) {
+                        warp.setPermission(null);
+                    } else {
+                        warp.setPermission(args[1]);
+                    }
+
+                    warp.saveWarp();
+                    return false;
+                }
             }
 
             if (args.length == 3) {
