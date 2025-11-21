@@ -133,19 +133,6 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     Bukkit.dispatchCommand(sender, "location set warp-" + warpName);
                     return false;
                 }
-
-                if (args[0].equalsIgnoreCase("setpermission")) {
-                    messanger.sendNonConfigMessage(sender, "%prefix% You have set the permission for '" + warpName + "'.");
-
-                    if(args[1].equalsIgnoreCase("none")) {
-                        warp.setPermission(null);
-                    } else {
-                        warp.setPermission(args[1]);
-                    }
-
-                    warp.saveWarp();
-                    return false;
-                }
             }
 
             if (args.length == 3) {
@@ -160,6 +147,19 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     messanger.sendNonConfigMessage(sender, "%prefix% You have set slot for '" + warpName + "' to " + newSlot + ".");
                     warp.setSlot(newSlot);
 
+                    return false;
+                }
+
+                if (args[0].equalsIgnoreCase("setpermission")) {
+                    messanger.sendNonConfigMessage(sender, "%prefix% You have set the permission for '" + warpName + "'.");
+
+                    if(args[2].equalsIgnoreCase("none")) {
+                        warp.setPermission(null);
+                    } else {
+                        warp.setPermission(args[2]);
+                    }
+
+                    warp.saveWarp();
                     return false;
                 }
             }
@@ -183,6 +183,7 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     "/warp create <name>",
                     "/warp delete <name>",
                     "/warp setlocation <name>",
+                    "/warp setpermission <name> <permission or none>",
                     "/warp setslot <name> <slot>",
                     "/warp setprefix <name> <prefix>",
                     "/warp setitem <name>"
@@ -221,6 +222,7 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                 list.add("setitem");
                 list.add("setprefix");
                 list.add("setlocation");
+                list.add("setpermission");
                 list.add("reload");
                 list.add("list");
             }
