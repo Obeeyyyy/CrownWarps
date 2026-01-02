@@ -146,6 +146,7 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
 
                     messanger.sendNonConfigMessage(sender, "%prefix% You have set slot for '" + warpName + "' to " + newSlot + ".");
                     warp.setSlot(newSlot);
+                    warp.saveWarp();
 
                     return false;
                 }
