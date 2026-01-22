@@ -173,8 +173,9 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     prefix = prefix + " " + args[i];
                 }
 
-                warp.setPrefix(prefix);
                 messanger.sendNonConfigMessage(sender, "%prefix% Set prefix for warp '" + warpName + "' to " + prefix + ".");
+                warp.setPrefix(prefix);
+                warp.saveWarp();
 
                 return false;
             }
