@@ -44,13 +44,11 @@ public class WarpHandler {
 
         warps.clear();
 
-        if(!folder.exists()) {
+        if(!folder.exists())
             folder.mkdir();
-        }
 
-        if(folder.listFiles() == null) {
+        if(folder.listFiles() == null)
             return;
-        }
 
         for (final File file : folder.listFiles()) {
             final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
@@ -98,18 +96,17 @@ public class WarpHandler {
     }
 
     public void openWarpInventory(final Player player) {
-        final Inventory inventory = Bukkit.createInventory(new WarpHolder(), pluginConfig.getGuiSize(), messanger.getMessage("warp-gui-title"));
+        final Inventory inventory = Bukkit.createInventory(new WarpHolder(), pluginConfig.getGuiSize(), messanger.getMessageComponent("warp-gui-title"));
 
         if (!warps.isEmpty()) {
             warps.values().forEach(warp -> {
-                if(warp.getSlot() ==  -1) {
+                if(warp.getSlot() ==  -1)
                     return;
-                }
 
                 inventory.setItem(warp.getSlot(),
                         new ItemBuilder(warp.getMaterial())
-                                .setDisplayname(warp.getPrefix())
-                                .setLore(messanger.getMultiLineMessage("warp-item-lore",
+                                .name(warp.getPrefix())
+                                .lore(messanger.getMultiLineMessage("warp-item-lore",
                                         new String[]{"warp", "prefix"},
                                         warp.getName(), warp.getPrefix())
                                 ).build());
@@ -121,7 +118,7 @@ public class WarpHandler {
                 if(slot >= inventory.getSize())
                     continue;
 
-                inventory.setItem(slot, new ItemBuilder(pluginConfig.getPlaceholderMaterial()).setDisplayname(" ").build());
+                inventory.setItem(slot, new ItemBuilder(pluginConfig.getPlaceholderMaterial()).name(" ").build());
             }
         }
 

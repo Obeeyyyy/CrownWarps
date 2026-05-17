@@ -24,6 +24,7 @@ public class PluginConfig extends CrownConfig {
 
     @Override
     public void loadConfig() {
+        super.loadConfig();
 
         final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(getConfigFile());
 
