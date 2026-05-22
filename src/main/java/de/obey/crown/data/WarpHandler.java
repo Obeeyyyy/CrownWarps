@@ -107,8 +107,8 @@ public class WarpHandler {
                         new ItemBuilder(warp.getMaterial())
                                 .name(warp.getPrefix())
                                 .lore(messanger.getMultiLineMessage("warp-item-lore",
-                                        new String[]{"warp", "prefix"},
-                                        warp.getName(), warp.getPrefix())
+                                        new String[]{"warp", "prefix", "description"},
+                                        warp.getName(), warp.getPrefix(), messanger.getMessage("warp-description-" + warp))
                                 ).build());
             });
         }
