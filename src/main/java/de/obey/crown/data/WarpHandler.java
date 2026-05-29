@@ -18,8 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class WarpHandler {
@@ -103,13 +102,30 @@ public class WarpHandler {
                 if(warp.getSlot() ==  -1)
                     return;
 
-                inventory.setItem(warp.getSlot(),
-                        new ItemBuilder(warp.getMaterial())
-                                .name(warp.getPrefix())
-                                .lore(messanger.getMultiLineMessage("warp-item-lore",
-                                        new String[]{"warp", "prefix", "description"},
-                                        warp.getName(), warp.getPrefix(), messanger.getMessage("warp-description-" + warp.getName()))
-                                ).build());
+                final ItemBuilder builder = new ItemBuilder(warp.getMaterial())
+                        .name(warp.getPrefix());
+
+                final List<String> lore = new ArrayList<>(messanger.getMultiLineMessage("warp-item-lore",
+                        new String[]{"warp", "prefix"},
+                        warp.getName(), warp.getPrefix()));
+
+                ListIterator<String> iterator = lore.listIterator();
+                while (iterator.hasNext()) {
+                    final String line = iterator.next();
+                    if (!line.equalsIgnoreCase("%description%"))
+                        continue;
+
+                    iterator.remove();
+
+                    final List<String> description = messanger.getMultiLineMessage("warp-description-" + warp.getName());
+                    for (String descLine : description)
+                        iterator.add(descLine);
+
+                    break;
+                }
+
+                builder.lore(lore);
+                inventory.setItem(warp.getSlot(), builder.build());
             });
         }
 

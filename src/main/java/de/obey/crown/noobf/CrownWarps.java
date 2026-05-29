@@ -29,6 +29,8 @@ public final class CrownWarps extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        log.setPlugin(this);
+
         pluginConfig = new PluginConfig(this);
         messanger = pluginConfig.getMessanger();
         sounds = pluginConfig.getSounds();
