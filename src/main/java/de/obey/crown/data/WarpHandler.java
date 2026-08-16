@@ -3,22 +3,19 @@ package de.obey.crown.data;
 import com.google.common.collect.Maps;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
+import de.obey.crown.core.gui.CrownGuiService;
 import de.obey.crown.core.handler.LocationHandler;
 import de.obey.crown.core.util.FileUtil;
-import de.obey.crown.core.util.ItemBuilder;
 import de.obey.crown.core.util.Teleporter;
 import de.obey.crown.noobf.CrownWarps;
 import de.obey.crown.noobf.PluginConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class WarpHandler {
@@ -55,8 +52,6 @@ public class WarpHandler {
             final Warp warp = new Warp(warpName);
 
             warp.setPrefix(FileUtil.getString(configuration, "prefix", "&f&l" + warpName));
-            warp.setSlot(FileUtil.getInt(configuration, "slot", 0));
-            warp.setMaterial(FileUtil.getMaterial(configuration, "showMaterial", Material.STICK));
             warp.setPermission(FileUtil.getString(configuration, "permission", null));
 
             warps.put(warp.getName(), warp);
@@ -75,7 +70,6 @@ public class WarpHandler {
         LocationHandler.setLocation("warp-" + warpName, player.getLocation());
         messanger.sendMessage(player, "warp-created", new String[]{"name"}, warpName);
         sounds.playSoundToPlayer(player, "warp-created");
-
     }
 
     public void deleteWarp(final Player player, String warpName) {
@@ -83,7 +77,6 @@ public class WarpHandler {
         if (!warps.containsKey(warpName)) {
             messanger.sendMessage(player, "warp-does-not-exist", new String[]{"name"}, warpName);
             sounds.playSoundToPlayer(player, "warp-does-not-exist");
-
             return;
         }
 
@@ -95,51 +88,7 @@ public class WarpHandler {
     }
 
     public void openWarpInventory(final Player player) {
-        final Inventory inventory = Bukkit.createInventory(new WarpHolder(), pluginConfig.getGuiSize(), messanger.getMessageComponent("warp-gui-title"));
-
-        if (!warps.isEmpty()) {
-            warps.values().forEach(warp -> {
-                if(warp.getSlot() ==  -1)
-                    return;
-
-                final ItemBuilder builder = new ItemBuilder(warp.getMaterial())
-                        .name(warp.getPrefix());
-
-                final List<String> lore = new ArrayList<>(messanger.getMultiLineMessage("warp-item-lore",
-                        new String[]{"warp", "prefix"},
-                        warp.getName(), warp.getPrefix()));
-
-                ListIterator<String> iterator = lore.listIterator();
-                while (iterator.hasNext()) {
-                    final String line = iterator.next();
-                    if (!line.equalsIgnoreCase("%description%"))
-                        continue;
-
-                    iterator.remove();
-
-                    final List<String> description = messanger.getMultiLineMessage("warp-description-" + warp.getName());
-                    for (String descLine : description)
-                        iterator.add(descLine);
-
-                    break;
-                }
-
-                builder.lore(lore);
-                inventory.setItem(warp.getSlot(), builder.build());
-            });
-        }
-
-        if(!pluginConfig.getPlaceholderSlots().isEmpty()) {
-            for (final int slot : pluginConfig.getPlaceholderSlots()) {
-                if(slot >= inventory.getSize())
-                    continue;
-
-                inventory.setItem(slot, new ItemBuilder(pluginConfig.getPlaceholderMaterial()).name(" ").build());
-            }
-        }
-
-        player.openInventory(inventory);
-        sounds.playSoundToPlayer(player, "open-gui");
+        CrownGuiService.open(player, CrownWarps.WARP_GUI);
     }
 
     public void teleportToWarp(final Player player, final String warpName) {

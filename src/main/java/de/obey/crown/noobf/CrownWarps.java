@@ -4,17 +4,17 @@ import de.obey.crown.commands.WarpCommand;
 import de.obey.crown.core.data.plugin.Log;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
+import de.obey.crown.core.gui.GuiActionRegistry;
 import de.obey.crown.data.WarpHandler;
 import de.obey.crown.listener.CoreStart;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public final class CrownWarps extends JavaPlugin {
 
+    public static final String WARP_GUI = "CrownWarps:warps";
     public static final Log log = new Log();
 
     private PluginConfig pluginConfig;
@@ -51,10 +51,14 @@ public final class CrownWarps extends JavaPlugin {
     }
 
     public void load() {
-        final PluginManager pluginManager = Bukkit.getPluginManager();
-        final WarpCommand warpCommand = new WarpCommand(pluginConfig, messanger, sounds, warpHandler);
+        GuiActionRegistry.register("cw-", (player, item, event) -> {
+            final String action = item.action();
+            final String warpName = action.startsWith("cw-") ? action.substring(3) : action;
 
-        pluginManager.registerEvents(warpCommand, this);
+            warpHandler.teleportToWarp(player, warpName);
+        });
+
+        final WarpCommand warpCommand = new WarpCommand(pluginConfig, messanger, sounds, warpHandler);
 
         getCommand("warp").setExecutor(warpCommand);
         getCommand("warps").setExecutor(warpCommand);

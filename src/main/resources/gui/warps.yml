@@ -1,0 +1,11 @@
+title: "&6&lWarps"
+size: 27
+
+items:
+  spawn:
+    material: GRASS_BLOCK
+    name: "&a&lSpawn"
+    lore:
+      - "&7Click to teleport to Spawn."
+    slot: 13
+    action: "cw-spawn"

@@ -5,10 +5,8 @@ package de.obey.crown.commands;
 
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
-import de.obey.crown.core.util.InventoryUtil;
 import de.obey.crown.data.Warp;
 import de.obey.crown.data.WarpHandler;
-import de.obey.crown.data.WarpHolder;
 import de.obey.crown.noobf.CrownWarps;
 import de.obey.crown.noobf.PluginConfig;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +16,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public final class WarpCommand implements CommandExecutor, Listener, TabCompleter {
+public final class WarpCommand implements CommandExecutor, TabCompleter {
 
     private final PluginConfig pluginConfig;
     private final Messanger messanger;
@@ -75,8 +70,9 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     for (final Warp warp : warpHandler.getWarps().values()) {
                         messanger.sendNonConfigMessage(sender,"- " + warp.getName());
                         messanger.sendNonConfigMessage(sender,"  prefix: " + warp.getPrefix());
-                        messanger.sendNonConfigMessage(sender,"  slot: " + warp.getSlot());
-                        messanger.sendNonConfigMessage(sender,"  material: " + warp.getMaterial().name());
+                        if(warp.getPermission() != null) {
+                            messanger.sendNonConfigMessage(sender,"  permission: " + warp.getPermission());
+                        }
                     }
 
                     return false;
@@ -113,22 +109,6 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     return false;
                 }
 
-                if (args[0].equalsIgnoreCase("setitem")) {
-
-
-                    if(!InventoryUtil.hasItemInHand(player)) {
-                        messanger.sendMessage(sender, "no-item-in-hand");
-                        return false;
-                    }
-
-                    messanger.sendNonConfigMessage(sender, "%prefix% You have set the show material for '" + warpName + "'.");
-
-                    warp.setMaterial(player.getInventory().getItemInMainHand().getType());
-                    warp.saveWarp();
-
-                    return false;
-                }
-
                 if (args[0].equalsIgnoreCase("setlocation")) {
                     Bukkit.dispatchCommand(sender, "location set warp-" + warpName);
                     return false;
@@ -136,21 +116,6 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
             }
 
             if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("setslot")) {
-
-                    final int newSlot = messanger.isValidInt(sender, args[2], -1);
-
-                    if(newSlot < 0) {
-                        return false;
-                    }
-
-                    messanger.sendNonConfigMessage(sender, "%prefix% You have set slot for '" + warpName + "' to " + newSlot + ".");
-                    warp.setSlot(newSlot);
-                    warp.saveWarp();
-
-                    return false;
-                }
-
                 if (args[0].equalsIgnoreCase("setpermission")) {
                     messanger.sendNonConfigMessage(sender, "%prefix% You have set the permission for '" + warpName + "'.");
 
@@ -186,9 +151,7 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
                     "/warp delete <name>",
                     "/warp setlocation <name>",
                     "/warp setpermission <name> <permission or none>",
-                    "/warp setslot <name> <slot>",
-                    "/warp setprefix <name> <prefix>",
-                    "/warp setitem <name>"
+                    "/warp setprefix <name> <prefix>"
             );
 
             return false;
@@ -220,8 +183,6 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
             if(sender.hasPermission("command.warp.admin")) {
                 list.add("create");
                 list.add("delete");
-                list.add("setslot");
-                list.add("setitem");
                 list.add("setprefix");
                 list.add("setlocation");
                 list.add("setpermission");
@@ -246,30 +207,5 @@ public final class WarpCommand implements CommandExecutor, Listener, TabComplete
             list.removeIf(value -> !value.toLowerCase().startsWith(argument.toLowerCase()));
 
         return list;
-    }
-
-    @EventHandler
-    public void on(final InventoryClickEvent event) {
-        if(!(event.getWhoClicked() instanceof Player player))
-            return;
-
-        if(!(event.getView().getTopInventory().getHolder() instanceof WarpHolder))
-            return;
-
-        event.setCancelled(true);
-
-        if(event.getCurrentItem() == null)
-            return;
-
-        if(pluginConfig.getPlaceholderSlots().contains(event.getSlot()))
-            return;
-
-        for (Warp warp : warpHandler.getWarps().values()) {
-            if (warp.getSlot() == event.getSlot()) {
-                warpHandler.teleportToWarp((Player) event.getWhoClicked(), warp.getName());
-                player.closeInventory();
-                break;
-            }
-        }
     }
 }
