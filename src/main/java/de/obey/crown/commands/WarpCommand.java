@@ -51,6 +51,7 @@ public final class WarpCommand implements CommandExecutor, TabCompleter {
                     pluginConfig.loadConfig();
                     pluginConfig.loadMessages();
                     pluginConfig.loadSounds();
+                    warpHandler.loadWarps();
 
                     messanger.sendMessage(sender, "plugin-reloaded", new String[]{"plugin"}, CrownWarps.getInstance().getName());
 

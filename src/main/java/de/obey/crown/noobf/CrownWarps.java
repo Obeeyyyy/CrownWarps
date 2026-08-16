@@ -4,7 +4,6 @@ import de.obey.crown.commands.WarpCommand;
 import de.obey.crown.core.data.plugin.Log;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
-import de.obey.crown.core.gui.GuiActionRegistry;
 import de.obey.crown.data.WarpHandler;
 import de.obey.crown.listener.CoreStart;
 import lombok.Getter;
@@ -51,12 +50,7 @@ public final class CrownWarps extends JavaPlugin {
     }
 
     public void load() {
-        GuiActionRegistry.register("cw-", (player, item, event) -> {
-            final String action = item.action();
-            final String warpName = action.startsWith("cw-") ? action.substring(3) : action;
-
-            warpHandler.teleportToWarp(player, warpName);
-        });
+        warpHandler.registerWarpActions();
 
         final WarpCommand warpCommand = new WarpCommand(pluginConfig, messanger, sounds, warpHandler);
 

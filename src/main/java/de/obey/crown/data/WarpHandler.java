@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import de.obey.crown.core.data.plugin.Messanger;
 import de.obey.crown.core.data.plugin.sound.Sounds;
 import de.obey.crown.core.gui.CrownGuiService;
+import de.obey.crown.core.gui.GuiActionRegistry;
 import de.obey.crown.core.handler.LocationHandler;
 import de.obey.crown.core.util.FileUtil;
 import de.obey.crown.core.util.Teleporter;
@@ -56,6 +57,16 @@ public class WarpHandler {
 
             warps.put(warp.getName(), warp);
         }
+
+        registerWarpActions();
+    }
+
+    public void registerWarpActions() {
+        for (final Warp warp : warps.values()) {
+            GuiActionRegistry.register("cw-" + warp.getName(), (player, item, event) -> {
+                teleportToWarp(player, warp.getName());
+            });
+        }
     }
 
     public void createWarp(final Player player, String warpName) {
@@ -67,7 +78,9 @@ public class WarpHandler {
         }
 
         warps.put(warpName, new Warp(warpName).saveWarp());
-        LocationHandler.setLocation("warp-" + warpName, player.getLocation());
+        final String finalWarpName = warpName;
+        LocationHandler.setLocation(finalWarpName, player.getLocation());
+        GuiActionRegistry.register("cw-" + warpName, (p, item, event) -> teleportToWarp(p, "warp-" + finalWarpName));
         messanger.sendMessage(player, "warp-created", new String[]{"name"}, warpName);
         sounds.playSoundToPlayer(player, "warp-created");
     }
